@@ -46,6 +46,12 @@ Module main
             My.Computer.FileSystem.WriteAllBytes(populousInstall & "\SAVE\key_def.dat", My.Resources.key_def, False)
 
             Dim appData As String = GetFolderPath(SpecialFolder.LocalApplicationData)
+
+            If Not My.Computer.FileSystem.DirectoryExists(appData & "\VirtualStore\Program Files (x86)\Bullfrog\Populous\.SAVE\") Then
+                My.Computer.FileSystem.CreateDirectory(appData & "\VirtualStore\Program Files (x86)\Bullfrog\Populous\.SAVE\")
+            End If
+            My.Computer.FileSystem.WriteAllBytes(appData & "\VirtualStore\Program Files (x86)\Bullfrog\Populous\.SAVE\key_def.dat", My.Resources.key_def, False)
+
             If Not My.Computer.FileSystem.DirectoryExists(appData & "\Populous Reincarnated\Populous\SAVE\") Then
                 My.Computer.FileSystem.CreateDirectory(appData & "\Populous Reincarnated\Populous\SAVE\")
             End If
@@ -62,26 +68,26 @@ Module main
         ConsoleTools.SetConsoleColors(ConsoleColor.white)
 
         Do Until Nothing
-            Application.DoEvents()
-            If status Then
-                ConsoleTools.SetConsoleColors(ConsoleColor.white)
-                Console.WriteLine(Date.Now & " Searching For Populous (SOFTWARE)..." & vbNewLine)
-                status = False
-            End If
-            If Not isRunning Then
-                Dim processesByName As Process() = Process.GetProcessesByName("popTB")
-                If Not (processesByName.Length < 1) Then
-                    ConsoleTools.SetConsoleColors(ConsoleColor.green)
-                    Console.WriteLine(Date.Now & " Populous Found, patching!" & vbNewLine)
+            Try
+                Application.DoEvents()
+                If status Then
                     ConsoleTools.SetConsoleColors(ConsoleColor.white)
-                    popTB = New PopProcess(processesByName(0))
-                    memory = New PopulousMemory(popTB, 1)
-                    isRunning = True
-                    memory.Change_Keys()
+                    Console.WriteLine(Date.Now & " Searching For Populous (SOFTWARE)..." & vbNewLine)
+                    status = False
                 End If
-            Else
-                If Not IsNothing(memory) Then
-                    If Not memory.isRunning Then
+                If Not isRunning Then
+                    Dim processesByName As Process() = Process.GetProcessesByName("popTB")
+                    If Not (processesByName.Length < 1) Then
+                        ConsoleTools.SetConsoleColors(ConsoleColor.green)
+                        Console.WriteLine(Date.Now & " Populous Found, patching!" & vbNewLine)
+                        ConsoleTools.SetConsoleColors(ConsoleColor.white)
+                        popTB = New PopProcess(processesByName(0))
+                        memory = New PopulousMemory(popTB, 1)
+                        isRunning = True
+                    End If
+                Else
+                    If Not IsNothing(memory) Then
+                        If Not memory.isRunning Then
                             ConsoleTools.SetConsoleColors(ConsoleColor.red)
                             Console.WriteLine(Date.Now & " Populous Exited :(" & vbNewLine)
                             status = True
@@ -89,9 +95,13 @@ Module main
                             memory = Nothing
                             popTB = Nothing
                         End If
+                    End If
                 End If
-            End If
-            System.Threading.Thread.Sleep(1)
+                System.Threading.Thread.Sleep(1)
+            Catch ex As Exception
+                ConsoleTools.SetConsoleColors(ConsoleColor.red)
+                Console.WriteLine(Date.Now & " Error: " & ex.Message & vbNewLine)
+            End Try
         Loop
     End Sub
     Private Function ReadSetting(key As String)
@@ -144,16 +154,12 @@ Module main
         If isRunning Then
             If memory.isRunning Then
                 If e.KeyCode = GameControls.UP Then ' UP
-                    Console.Write("UP" & vbNewLine)
                     memory.Movement_Key_Up(PopulousMemory.Movement.UP)
                 ElseIf e.KeyCode = GameControls.DOWN Then ' DOWN
-                    Console.Write("DOWN" & vbNewLine)
                     memory.Movement_Key_Up(PopulousMemory.Movement.DOWN)
                 ElseIf e.KeyCode = GameControls.ROTATE_LEFT Then ' LEFT
-                    Console.Write("LEFT" & vbNewLine)
                     memory.Movement_Key_Up(PopulousMemory.Movement.ROTATE_LEFT)
                 ElseIf e.KeyCode = GameControls.ROTATE_RIGHT Then ' RIGHT
-                    Console.Write("RIGHT" & vbNewLine)
                     memory.Movement_Key_Up(PopulousMemory.Movement.ROTATE_RIGHT)
                 End If
             End If

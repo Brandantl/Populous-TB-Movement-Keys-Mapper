@@ -41,13 +41,6 @@ Namespace PopMem
                 proc.WriteByte(CType(Movement.ROTATE_LEFT, IntPtr), 0)
             End If
         End Sub
-        Public Sub Change_Keys()
-            ' SOFTWARE ONLY
-            proc.WriteByte(CType(&H8853FA, IntPtr), 20)
-            proc.WriteByte(CType(&H877598, IntPtr), 11)
-            MsgBox("Don't close this dialog (don't press ""Ok"") until you're finished mapping keys. Go to the game. Press F6 to save the key mappings.")
-            proc.WriteByte(CType(&H8853FA, IntPtr), &HFF)
-        End Sub
         Public Sub New(ByVal TheProcess As PopProcess, ByVal TheRenderer As Integer)
             proc = TheProcess
             popRenderer = TheRenderer
