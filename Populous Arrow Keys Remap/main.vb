@@ -77,6 +77,7 @@ Module main
                     popTB = New PopProcess(processesByName(0))
                     memory = New PopulousMemory(popTB, 1)
                     isRunning = True
+                    memory.Change_Keys()
                 End If
             Else
                 If Not IsNothing(memory) Then

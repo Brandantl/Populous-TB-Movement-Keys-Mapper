@@ -91,7 +91,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="alexprocess.vb" />
+    <Compile Include="popprocess.vb" />
     <Compile Include="memory.vb" />
     <Compile Include="Third Party\ConsoleTools.vb" />
     <Compile Include="main.vb" />
