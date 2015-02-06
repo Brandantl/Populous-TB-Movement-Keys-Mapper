@@ -84,6 +84,7 @@ Module main
                         popTB = New PopProcess(processesByName(0))
                         memory = New PopulousMemory(popTB, 1)
                         isRunning = True
+
                     End If
                 Else
                     If Not IsNothing(memory) Then
